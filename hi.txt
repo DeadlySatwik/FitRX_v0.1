@@ -1,0 +1,3307 @@
+import { useState } from "react";
+import {
+  Camera,
+  User,
+  Home,
+  TrendingUp,
+  Settings,
+  Bell,
+  Calendar,
+  Play,
+  CheckCircle,
+  SkipForward,
+  Clock,
+  Dumbbell,
+  Apple,
+  FileText,
+  Upload,
+  Search,
+  Edit,
+  Trash2,
+  Users,
+  Award,
+  Target,
+  ChevronRight,
+  X,
+  Menu,
+  LogOut,
+  Info,
+  Download,
+  BarChart3,
+  Heart,
+  Zap,
+  MessageCircle,
+  Activity,
+} from "lucide-react";
+
+const FitTracker = () => {
+  const [currentScreen, setCurrentScreen] = useState("home");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Navigation Component
+  const Navigation = ({ active, userRole = "user" }) => (
+    <nav className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          <div className="flex items-center space-x-3">
+            <Dumbbell className="w-8 h-8" />
+            <span className="text-2xl font-bold">FitRX</span>
+          </div>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-6">
+            <NavItem
+              icon={Home}
+              label="Dashboard"
+              active={active === "dashboard"}
+              onClick={() => setCurrentScreen("dashboard")}
+            />
+            <NavItem
+              icon={Calendar}
+              label="Workouts"
+              active={active === "workouts"}
+              onClick={() => setCurrentScreen("workouts")}
+            />
+            <NavItem
+              icon={Apple}
+              label="Nutrition"
+              active={active === "nutrition"}
+              onClick={() => setCurrentScreen("nutrition")}
+            />
+            <NavItem
+              icon={TrendingUp}
+              label="Progress"
+              active={active === "progress"}
+              onClick={() => setCurrentScreen("progress")}
+            />
+            {userRole === "admin" && (
+              <NavItem
+                icon={Settings}
+                label="Admin"
+                active={active === "admin"}
+                onClick={() => setCurrentScreen("admin")}
+              />
+            )}
+            <NavItem
+              icon={User}
+              label="Profile"
+              active={active === "profile"}
+              onClick={() => setCurrentScreen("profile")}
+            />
+            <button className="p-2 hover:bg-white/10 rounded-full transition">
+              <Bell className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden p-2"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            <Menu className="w-6 h-6" />
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden bg-indigo-700 border-t border-indigo-500">
+          <div className="px-4 py-3 space-y-2">
+            <MobileNavItem
+              icon={Home}
+              label="Dashboard"
+              onClick={() => {
+                setCurrentScreen("dashboard");
+                setIsMobileMenuOpen(false);
+              }}
+            />
+            <MobileNavItem
+              icon={Calendar}
+              label="Workouts"
+              onClick={() => {
+                setCurrentScreen("workouts");
+                setIsMobileMenuOpen(false);
+              }}
+            />
+            <MobileNavItem
+              icon={Apple}
+              label="Nutrition"
+              onClick={() => {
+                setCurrentScreen("nutrition");
+                setIsMobileMenuOpen(false);
+              }}
+            />
+            <MobileNavItem
+              icon={TrendingUp}
+              label="Progress"
+              onClick={() => {
+                setCurrentScreen("progress");
+                setIsMobileMenuOpen(false);
+              }}
+            />
+            <MobileNavItem
+              icon={User}
+              label="Profile"
+              onClick={() => {
+                setCurrentScreen("profile");
+                setIsMobileMenuOpen(false);
+              }}
+            />
+          </div>
+        </div>
+      )}
+    </nav>
+  );
+
+  const NavItem = ({ icon: Icon, label, active, onClick }) => (
+    <button
+      onClick={onClick}
+      className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition ${
+        active ? "bg-white/20" : "hover:bg-white/10"
+      }`}
+    >
+      <Icon className="w-5 h-5" />
+      <span className="font-medium">{label}</span>
+    </button>
+  );
+
+  const MobileNavItem = ({ icon: Icon, label, onClick }) => (
+    <button
+      onClick={onClick}
+      className="flex items-center space-x-3 w-full px-4 py-3 hover:bg-indigo-600 rounded-lg transition"
+    >
+      <Icon className="w-5 h-5" />
+      <span>{label}</span>
+    </button>
+  );
+
+  // Login/Registration Screen
+  const LoginScreen = () => (
+    <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
+        <div className="text-center mb-8">
+          <div className="flex justify-center mb-4">
+            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-4 rounded-full">
+              <Dumbbell className="w-12 h-12 text-white" />
+            </div>
+          </div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Welcome to FitRX
+          </h1>
+          <p className="text-gray-600">AI-Powered Adaptive Fitness</p>
+        </div>
+
+        <div className="space-y-4 mb-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Email
+            </label>
+            <input
+              type="email"
+              placeholder="Enter your email"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Password
+            </label>
+            <input
+              type="password"
+              placeholder="Enter your password"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+            />
+          </div>
+          <div className="flex items-center justify-between text-sm">
+            <label className="flex items-center space-x-2">
+              <input type="checkbox" className="rounded border-gray-300" />
+              <span className="text-gray-600">Remember me</span>
+            </label>
+            <a
+              href="#"
+              className="text-indigo-600 hover:text-indigo-700 font-medium"
+            >
+              Forgot password?
+            </a>
+          </div>
+        </div>
+
+        <button
+          onClick={() => setCurrentScreen("onboarding")}
+          className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-lg font-semibold hover:from-indigo-700 hover:to-purple-700 transition mb-4"
+        >
+          Sign In
+        </button>
+
+        <div className="relative mb-4">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-300"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-4 bg-white text-gray-500">
+              Or continue with
+            </span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 mb-6">
+          <button className="flex items-center justify-center space-x-2 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+            <svg className="w-5 h-5" viewBox="0 0 24 24">
+              <path
+                fill="#4285F4"
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+              />
+              <path
+                fill="#34A853"
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+              />
+              <path
+                fill="#FBBC05"
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+              />
+              <path
+                fill="#EA4335"
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+              />
+            </svg>
+            <span>Google</span>
+          </button>
+          <button className="flex items-center justify-center space-x-2 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z" />
+            </svg>
+            <span>GitHub</span>
+          </button>
+        </div>
+
+        <p className="text-center text-sm text-gray-600">
+          Don't have an account?{" "}
+          <button
+            onClick={() => setCurrentScreen("register")}
+            className="text-indigo-600 hover:text-indigo-700 font-medium"
+          >
+            Sign up
+          </button>
+        </p>
+      </div>
+    </div>
+  );
+
+  // Registration/Onboarding Screen
+  const OnboardingScreen = () => (
+    <div className="min-h-screen bg-gray-50 p-4">
+      <div className="max-w-2xl mx-auto py-8">
+        <div className="bg-white rounded-2xl shadow-lg p-8">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Complete Your Profile
+            </h1>
+            <p className="text-gray-600">
+              Manage exercises, users, and content
+            </p>
+          </div>
+          <button className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-indigo-700 hover:to-purple-700 transition flex items-center space-x-2">
+            <Upload className="w-5 h-5" />
+            <span>Add Exercise</span>
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <StatCard
+            icon={Users}
+            title="Total Users"
+            value="1,847"
+            subtitle="+124 this month"
+            color="blue"
+          />
+          <StatCard
+            icon={Dumbbell}
+            title="Total Exercises"
+            value="342"
+            subtitle="28 categories"
+            color="purple"
+          />
+          <StatCard
+            icon={TrendingUp}
+            title="Active Workouts"
+            value="4,521"
+            subtitle="Today"
+            color="green"
+          />
+          <StatCard
+            icon={FileText}
+            title="Support Tickets"
+            value="12"
+            subtitle="3 pending"
+            color="orange"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          <div className="lg:col-span-2 bg-white rounded-xl shadow-md p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-gray-900">
+                Exercise Library
+              </h2>
+              <div className="flex space-x-3">
+                <div className="relative">
+                  <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                  <input
+                    type="text"
+                    placeholder="Search exercises..."
+                    className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                  />
+                </div>
+                <select className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
+                  <option>All Categories</option>
+                  <option>Chest</option>
+                  <option>Back</option>
+                  <option>Legs</option>
+                  <option>Shoulders</option>
+                  <option>Arms</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              {[
+                {
+                  name: "Bench Press",
+                  category: "Chest",
+                  difficulty: "Moderate",
+                  media: "Video + Image",
+                  status: "Active",
+                },
+                {
+                  name: "Squats",
+                  category: "Legs",
+                  difficulty: "Moderate",
+                  media: "Video",
+                  status: "Active",
+                },
+                {
+                  name: "Deadlift",
+                  category: "Back",
+                  difficulty: "Hard",
+                  media: "Video + Image",
+                  status: "Active",
+                },
+                {
+                  name: "Shoulder Press",
+                  category: "Shoulders",
+                  difficulty: "Easy",
+                  media: "Image",
+                  status: "Review",
+                },
+                {
+                  name: "Bicep Curls",
+                  category: "Arms",
+                  difficulty: "Easy",
+                  media: "Video",
+                  status: "Active",
+                },
+              ].map((ex, i) => (
+                <div
+                  key={i}
+                  className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-indigo-300 hover:bg-indigo-50 transition"
+                >
+                  <div className="flex-1">
+                    <div className="font-bold text-gray-900">{ex.name}</div>
+                    <div className="flex items-center space-x-3 mt-1">
+                      <span className="text-xs px-2 py-1 bg-gray-100 text-gray-700 rounded">
+                        {ex.category}
+                      </span>
+                      <span className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded">
+                        {ex.difficulty}
+                      </span>
+                      <span className="text-xs text-gray-600">{ex.media}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        ex.status === "Active"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-yellow-100 text-yellow-700"
+                      }`}
+                    >
+                      {ex.status}
+                    </span>
+                    <button className="p-2 hover:bg-gray-100 rounded-lg transition">
+                      <Edit className="w-4 h-4 text-gray-600" />
+                    </button>
+                    <button className="p-2 hover:bg-red-50 rounded-lg transition">
+                      <Trash2 className="w-4 h-4 text-red-600" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <button className="w-full mt-4 py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 transition">
+              View All Exercises
+            </button>
+          </div>
+
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl shadow-md p-6">
+              <h3 className="font-bold text-gray-900 mb-4">Recent Activity</h3>
+              <div className="space-y-4">
+                <ActivityItem
+                  icon={Users}
+                  text="124 new users registered"
+                  time="Today"
+                  color="blue"
+                />
+                <ActivityItem
+                  icon={Dumbbell}
+                  text="5 exercises added"
+                  time="2 hours ago"
+                  color="purple"
+                />
+                <ActivityItem
+                  icon={FileText}
+                  text="3 support tickets opened"
+                  time="5 hours ago"
+                  color="orange"
+                />
+                <ActivityItem
+                  icon={Upload}
+                  text="18 media files uploaded"
+                  time="Yesterday"
+                  color="green"
+                />
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-md p-6">
+              <h3 className="font-bold text-gray-900 mb-4">Quick Actions</h3>
+              <div className="space-y-3">
+                <button className="w-full p-3 bg-indigo-50 border border-indigo-200 rounded-lg hover:bg-indigo-100 transition text-left flex items-center space-x-3">
+                  <Upload className="w-5 h-5 text-indigo-600" />
+                  <span className="font-medium text-indigo-900">
+                    Upload Exercise Media
+                  </span>
+                </button>
+                <button className="w-full p-3 bg-green-50 border border-green-200 rounded-lg hover:bg-green-100 transition text-left flex items-center space-x-3">
+                  <Users className="w-5 h-5 text-green-600" />
+                  <span className="font-medium text-green-900">
+                    View User Reports
+                  </span>
+                </button>
+                <button className="w-full p-3 bg-orange-50 border border-orange-200 rounded-lg hover:bg-orange-100 transition text-left flex items-center space-x-3">
+                  <FileText className="w-5 h-5 text-orange-600" />
+                  <span className="font-medium text-orange-900">
+                    Support Queue
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl shadow-md p-6 text-white">
+              <Settings className="w-10 h-10 mb-3" />
+              <h3 className="text-lg font-bold mb-2">System Status</h3>
+              <div className="space-y-2 text-sm">
+                <div className="flex items-center justify-between">
+                  <span>API Status</span>
+                  <span className="flex items-center">
+                    <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
+                    Online
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Database</span>
+                  <span className="flex items-center">
+                    <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
+                    Healthy
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>ML Service</span>
+                  <span className="flex items-center">
+                    <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
+                    Running
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-md p-6">
+          <h2 className="text-xl font-bold text-gray-900 mb-6">
+            User Management
+          </h2>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-gray-200">
+                  <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">
+                    User
+                  </th>
+                  <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">
+                    Email
+                  </th>
+                  <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">
+                    Join Date
+                  </th>
+                  <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">
+                    Workouts
+                  </th>
+                  <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">
+                    Status
+                  </th>
+                  <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  {
+                    name: "John Doe",
+                    email: "john@email.com",
+                    joined: "Aug 27, 2025",
+                    workouts: 48,
+                    status: "Active",
+                  },
+                  {
+                    name: "Jane Smith",
+                    email: "jane@email.com",
+                    joined: "Sep 12, 2025",
+                    workouts: 32,
+                    status: "Active",
+                  },
+                  {
+                    name: "Mike Johnson",
+                    email: "mike@email.com",
+                    joined: "Oct 3, 2025",
+                    workouts: 15,
+                    status: "Active",
+                  },
+                  {
+                    name: "Sarah Williams",
+                    email: "sarah@email.com",
+                    joined: "Oct 10, 2025",
+                    workouts: 8,
+                    status: "Inactive",
+                  },
+                ].map((user, i) => (
+                  <tr
+                    key={i}
+                    className="border-b border-gray-100 hover:bg-gray-50"
+                  >
+                    <td className="py-3 px-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold">
+                          {user.name
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")}
+                        </div>
+                        <span className="font-medium text-gray-900">
+                          {user.name}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="py-3 px-4 text-gray-600">{user.email}</td>
+                    <td className="py-3 px-4 text-gray-600">{user.joined}</td>
+                    <td className="py-3 px-4 text-gray-900 font-medium">
+                      {user.workouts}
+                    </td>
+                    <td className="py-3 px-4">
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-medium ${
+                          user.status === "Active"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-gray-100 text-gray-700"
+                        }`}
+                      >
+                        {user.status}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4">
+                      <div className="flex items-center space-x-2">
+                        <button className="p-2 hover:bg-indigo-50 rounded-lg transition">
+                          <svg
+                            className="w-4 h-4 text-indigo-600"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                            />
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                            />
+                          </svg>
+                        </button>
+                        <button className="p-2 hover:bg-gray-100 rounded-lg transition">
+                          <Edit className="w-4 h-4 text-gray-600" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Helper Components
+  const StatCard = ({ icon: Icon, title, value, subtitle, color }) => {
+    const gradientMap = {
+      orange: "from-orange-500 to-red-500",
+      blue: "from-blue-500 to-indigo-500",
+      green: "from-green-500 to-teal-500",
+      purple: "from-purple-500 to-pink-500",
+    };
+
+    return (
+      <div className="bg-white rounded-xl shadow-md p-6">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-gray-600 text-sm font-medium">{title}</span>
+          <div
+            className={`p-3 bg-gradient-to-br ${gradientMap[color]} rounded-lg`}
+          >
+            <Icon className="w-5 h-5 text-white" />
+          </div>
+        </div>
+        <div className="text-3xl font-bold text-gray-900 mb-1">{value}</div>
+        <div className="text-sm text-gray-500">{subtitle}</div>
+      </div>
+    );
+  };
+
+  const ExerciseItem = ({ name, sets, difficulty }) => {
+    const difficultyColorMap = {
+      Easy: "bg-green-100 text-green-700",
+      Moderate: "bg-orange-100 text-orange-700",
+      Hard: "bg-red-100 text-red-700",
+    };
+
+    return (
+      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+            <Dumbbell className="w-5 h-5 text-indigo-600" />
+          </div>
+          <div>
+            <div className="font-medium text-gray-900">{name}</div>
+            <div className="text-sm text-gray-600">{sets}</div>
+          </div>
+        </div>
+        <span
+          className={`px-3 py-1 rounded-full text-xs font-medium ${
+            difficultyColorMap[difficulty] || "bg-gray-100 text-gray-700"
+          }`}
+        >
+          {difficulty}
+        </span>
+      </div>
+    );
+  };
+
+  const MealItem = ({ meal, time, items, calories }) => (
+    <div className="border border-gray-200 rounded-lg p-4 hover:border-indigo-300 hover:bg-indigo-50 transition">
+      <div className="flex items-center justify-between mb-3">
+        <div>
+          <h3 className="font-bold text-gray-900">{meal}</h3>
+          <p className="text-sm text-gray-600">{time}</p>
+        </div>
+        <div className="text-right">
+          <div className="text-2xl font-bold text-indigo-600">{calories}</div>
+          <div className="text-xs text-gray-600">calories</div>
+        </div>
+      </div>
+      <div className="space-y-1">
+        {items.map((item, i) => (
+          <div key={i} className="flex items-center text-sm text-gray-700">
+            <div className="w-1.5 h-1.5 bg-indigo-400 rounded-full mr-2"></div>
+            {item}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  const InfoRow = ({ label, value }) => (
+    <div className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
+      <span className="text-gray-600">{label}</span>
+      <span className="font-medium text-gray-900">{value}</span>
+    </div>
+  );
+
+  const SettingRow = ({ icon: Icon, label, description, children }) => (
+    <div className="flex items-center justify-between py-4 border-b border-gray-100 last:border-0">
+      <div className="flex items-center space-x-4 flex-1">
+        <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
+          <Icon className="w-5 h-5 text-indigo-600" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="font-medium text-gray-900">{label}</div>
+          <div className="text-sm text-gray-600">{description}</div>
+        </div>
+      </div>
+      <div className="ml-4 flex-shrink-0">{children}</div>
+    </div>
+  );
+
+  const ActivityItem = ({ icon: Icon, text, time, color }) => {
+    const colorMap = {
+      blue: "bg-blue-100 text-blue-600",
+      purple: "bg-purple-100 text-purple-600",
+      orange: "bg-orange-100 text-orange-600",
+      green: "bg-green-100 text-green-600",
+    };
+
+    return (
+      <div className="flex items-start space-x-3">
+        <div className={`p-2 ${colorMap[color]} rounded-lg`}>
+          <Icon className="w-4 h-4" />
+        </div>
+        <div className="flex-1">
+          <p className="text-sm text-gray-900">{text}</p>
+          <p className="text-xs text-gray-500">{time}</p>
+        </div>
+      </div>
+    );
+  };
+
+  const Eye = ({ className }) => (
+    <svg
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+      />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+      />
+    </svg>
+  );
+
+  // Workout Plan Screen
+  const WorkoutPlanScreen = () => (
+    <div className="min-h-screen bg-gray-50">
+      <Navigation active="workouts" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Workout Plans
+            </h1>
+            <p className="text-gray-600">
+              View and manage your workout schedule
+            </p>
+          </div>
+          <button className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-indigo-700 hover:to-purple-700 transition flex items-center space-x-2">
+            <Calendar className="w-5 h-5" />
+            <span>Generate New Plan</span>
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
+          <button className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition text-left border-2 border-indigo-500">
+            <div className="flex items-center justify-between mb-3">
+              <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium">
+                Active
+              </span>
+              <CheckCircle className="w-6 h-6 text-indigo-600" />
+            </div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">
+              Current Week
+            </h3>
+            <p className="text-gray-600 mb-4">5 workouts scheduled</p>
+            <div className="flex items-center text-sm text-gray-600">
+              <Calendar className="w-4 h-4 mr-2" />
+              Oct 14 - Oct 20
+            </div>
+          </button>
+
+          {["Next Week", "Week 3", "Week 4"].map((week, i) => (
+            <button
+              key={week}
+              className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition text-left"
+            >
+              <div className="flex items-center justify-between mb-3">
+                <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium">
+                  Upcoming
+                </span>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">{week}</h3>
+              <p className="text-gray-600 mb-4">{5 - i} workouts planned</p>
+              <div className="flex items-center text-sm text-gray-600">
+                <Calendar className="w-4 h-4 mr-2" />
+                Oct {21 + i * 7} - Oct {27 + i * 7}
+              </div>
+            </button>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 space-y-6">
+            {[
+              {
+                day: "Monday",
+                date: "Oct 14",
+                type: "Upper Body",
+                exercises: 5,
+                duration: "45 min",
+                completed: true,
+              },
+              {
+                day: "Tuesday",
+                date: "Oct 15",
+                type: "Lower Body",
+                exercises: 6,
+                duration: "50 min",
+                completed: true,
+              },
+              {
+                day: "Wednesday",
+                date: "Oct 16",
+                type: "Rest Day",
+                exercises: 0,
+                duration: "-",
+                completed: true,
+                isRest: true,
+              },
+              {
+                day: "Thursday",
+                date: "Oct 17",
+                type: "Push Day",
+                exercises: 5,
+                duration: "45 min",
+                completed: true,
+              },
+              {
+                day: "Friday",
+                date: "Oct 18",
+                type: "Pull Day",
+                exercises: 6,
+                duration: "50 min",
+                completed: false,
+                isToday: true,
+              },
+              {
+                day: "Saturday",
+                date: "Oct 19",
+                type: "Legs & Core",
+                exercises: 7,
+                duration: "55 min",
+                completed: false,
+              },
+              {
+                day: "Sunday",
+                date: "Oct 20",
+                type: "Rest Day",
+                exercises: 0,
+                duration: "-",
+                completed: false,
+                isRest: true,
+              },
+            ].map((workout, i) => (
+              <div
+                key={i}
+                className={`bg-white rounded-xl shadow-md p-6 ${
+                  workout.isToday ? "ring-2 ring-indigo-500" : ""
+                }`}
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <div className="flex items-center space-x-3 mb-2">
+                      <h3 className="text-xl font-bold text-gray-900">
+                        {workout.day}
+                      </h3>
+                      {workout.isToday && (
+                        <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-medium">
+                          Today
+                        </span>
+                      )}
+                      {workout.completed && (
+                        <CheckCircle className="w-5 h-5 text-green-600" />
+                      )}
+                    </div>
+                    <p className="text-gray-600">{workout.date}, 2025</p>
+                  </div>
+                  {!workout.isRest && (
+                    <button className="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 transition">
+                      {workout.completed ? "Review" : "Start"}
+                    </button>
+                  )}
+                </div>
+
+                {workout.isRest ? (
+                  <div className="flex items-center space-x-3 text-gray-600">
+                    <Heart className="w-5 h-5" />
+                    <span>Active recovery and rest</span>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="flex items-center space-x-6 mb-4 text-sm text-gray-600">
+                      <div className="flex items-center space-x-2">
+                        <Dumbbell className="w-4 h-4" />
+                        <span>{workout.exercises} exercises</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Clock className="w-4 h-4" />
+                        <span>{workout.duration}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="px-4 py-2 bg-purple-100 text-purple-700 rounded-lg text-sm font-medium">
+                        {workout.type}
+                      </span>
+                      <button className="text-indigo-600 hover:text-indigo-700 font-medium text-sm">
+                        View Details →
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl shadow-md p-6">
+              <h3 className="font-bold text-gray-900 mb-4">Weekly Overview</h3>
+              <div className="space-y-4">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm text-gray-600">
+                      Completion Rate
+                    </span>
+                    <span className="text-sm font-bold text-gray-900">80%</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div
+                      className="bg-gradient-to-r from-green-500 to-teal-500 rounded-full h-2"
+                      style={{ width: "80%" }}
+                    ></div>
+                  </div>
+                </div>
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm text-gray-600">Volume</span>
+                    <span className="text-sm font-bold text-gray-900">
+                      28 sets
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div
+                      className="bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full h-2"
+                      style={{ width: "70%" }}
+                    ></div>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between pt-3 border-t border-gray-200">
+                  <span className="text-sm text-gray-600">Workouts Left</span>
+                  <span className="text-2xl font-bold text-indigo-600">3</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-md p-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">
+                Muscle Groups
+              </h2>
+              <div className="space-y-3">
+                {[
+                  { name: "Chest", frequency: 2, color: "red" },
+                  { name: "Back", frequency: 2, color: "blue" },
+                  { name: "Legs", frequency: 2, color: "green" },
+                  { name: "Shoulders", frequency: 2, color: "yellow" },
+                  { name: "Arms", frequency: 3, color: "purple" },
+                ].map((muscle, i) => {
+                  const barColorMap = {
+                    red: "bg-red-500",
+                    blue: "bg-blue-500",
+                    green: "bg-green-500",
+                    yellow: "bg-yellow-500",
+                    purple: "bg-purple-500",
+                  };
+
+                  return (
+                    <div key={i}>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-sm text-gray-700">
+                          {muscle.name}
+                        </span>
+                        <span className="text-xs text-gray-600">
+                          {muscle.frequency}x/week
+                        </span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-1.5">
+                        <div
+                          className={`${
+                            barColorMap[muscle.color]
+                          } rounded-full h-1.5`}
+                          style={{ width: `${(muscle.frequency / 3) * 100}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-br from-orange-500 to-red-600 rounded-xl shadow-md p-6 text-white">
+              <Zap className="w-10 h-10 mb-3" />
+              <h3 className="text-lg font-bold mb-2">This Week</h3>
+              <div className="space-y-2 text-sm">
+                <div className="flex items-center justify-between">
+                  <span>Est. Calories Burned</span>
+                  <span className="font-bold">1,850</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Total Duration</span>
+                  <span className="font-bold">4h 15m</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Avg Intensity</span>
+                  <span className="font-bold">Moderate</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Notifications Screen
+  const NotificationsScreen = () => (
+    <div className="min-h-screen bg-gray-50">
+      <Navigation active="dashboard" />
+
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Notifications
+            </h1>
+            <p className="text-gray-600">
+              Stay updated with your fitness journey
+            </p>
+          </div>
+          <button className="text-indigo-600 hover:text-indigo-700 font-medium">
+            Mark all as read
+          </button>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-md overflow-hidden">
+          {[
+            {
+              icon: Calendar,
+              title: "Workout Reminder",
+              message: "Time for your Pull Day workout!",
+              time: "2 hours ago",
+              unread: true,
+              color: "indigo",
+            },
+            {
+              icon: Award,
+              title: "Achievement Unlocked",
+              message: "You've completed 50 workouts! Keep crushing it! 🎉",
+              time: "5 hours ago",
+              unread: true,
+              color: "yellow",
+            },
+            {
+              icon: TrendingUp,
+              title: "New Personal Record",
+              message: "You lifted 5kg more on Bench Press!",
+              time: "1 day ago",
+              unread: false,
+              color: "green",
+            },
+            {
+              icon: Apple,
+              title: "Nutrition Goal Met",
+              message: "You hit your protein target for today!",
+              time: "1 day ago",
+              unread: false,
+              color: "orange",
+            },
+            {
+              icon: Calendar,
+              title: "Rest Day Tomorrow",
+              message: "Don't forget to take your scheduled rest day",
+              time: "2 days ago",
+              unread: false,
+              color: "blue",
+            },
+            {
+              icon: User,
+              title: "Profile Update",
+              message: "Your fitness goals have been updated successfully",
+              time: "3 days ago",
+              unread: false,
+              color: "purple",
+            },
+          ].map((notif, i) => {
+            const NotifIcon = notif.icon;
+            const bgColorMap = {
+              indigo: "bg-indigo-100",
+              yellow: "bg-yellow-100",
+              green: "bg-green-100",
+              orange: "bg-orange-100",
+              blue: "bg-blue-100",
+              purple: "bg-purple-100",
+            };
+            const textColorMap = {
+              indigo: "text-indigo-600",
+              yellow: "text-yellow-600",
+              green: "text-green-600",
+              orange: "text-orange-600",
+              blue: "text-blue-600",
+              purple: "text-purple-600",
+            };
+
+            return (
+              <div
+                key={i}
+                className={`flex items-start space-x-4 p-6 border-b border-gray-100 last:border-0 ${
+                  notif.unread ? "bg-indigo-50" : "hover:bg-gray-50"
+                } transition`}
+              >
+                <div
+                  className={`p-3 ${
+                    bgColorMap[notif.color]
+                  } rounded-lg flex-shrink-0`}
+                >
+                  <NotifIcon
+                    className={`w-6 h-6 ${textColorMap[notif.color]}`}
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between mb-1">
+                    <h3 className="font-bold text-gray-900">{notif.title}</h3>
+                    {notif.unread && (
+                      <div className="w-2 h-2 bg-indigo-600 rounded-full"></div>
+                    )}
+                  </div>
+                  <p className="text-gray-600 mb-2">{notif.message}</p>
+                  <span className="text-xs text-gray-500">{notif.time}</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+
+  // Exercise Detail Modal Component
+  const ExerciseDetailScreen = () => (
+    <div className="min-h-screen bg-gray-50">
+      <Navigation active="workouts" />
+
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <button
+          onClick={() => setCurrentScreen("workout-plan")}
+          className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 mb-6 transition"
+        >
+          <ChevronRight className="w-5 h-5 rotate-180" />
+          <span>Back to Workout Plan</span>
+        </button>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl shadow-md overflow-hidden">
+              <div className="aspect-video bg-gray-900 relative">
+                <img
+                  src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800"
+                  alt="Exercise"
+                  className="w-full h-full object-cover"
+                />
+                <button className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/50 transition">
+                  <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center">
+                    <Play className="w-10 h-10 text-indigo-600 ml-2" />
+                  </div>
+                </button>
+              </div>
+
+              <div className="p-6">
+                <h1 className="text-3xl font-bold text-gray-900 mb-3">
+                  Bench Press
+                </h1>
+                <div className="flex items-center space-x-3 mb-4">
+                  <span className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-medium">
+                    Moderate
+                  </span>
+                  <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                    Compound
+                  </span>
+                  <span className="text-gray-600">
+                    Chest, Triceps, Shoulders
+                  </span>
+                </div>
+
+                <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4 mb-6">
+                  <h3 className="font-bold text-indigo-900 mb-3 flex items-center">
+                    <Info className="w-5 h-5 mr-2" />
+                    Exercise Instructions
+                  </h3>
+                  <ol className="space-y-2 text-sm text-indigo-800">
+                    <li className="flex items-start">
+                      <span className="font-bold mr-2">1.</span>
+                      <span>
+                        Lie flat on a bench with your feet planted firmly on the
+                        ground
+                      </span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="font-bold mr-2">2.</span>
+                      <span>
+                        Grip the barbell slightly wider than shoulder-width
+                        apart
+                      </span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="font-bold mr-2">3.</span>
+                      <span>
+                        Lower the bar in a controlled manner to mid-chest level
+                      </span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="font-bold mr-2">4.</span>
+                      <span>
+                        Press the bar back up to the starting position, fully
+                        extending your arms
+                      </span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="font-bold mr-2">5.</span>
+                      <span>
+                        Maintain a slight arch in your lower back throughout the
+                        movement
+                      </span>
+                    </li>
+                  </ol>
+                </div>
+
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                  <h3 className="font-bold text-yellow-900 mb-2 flex items-center">
+                    <span className="mr-2">⚠️</span>
+                    Safety Tips
+                  </h3>
+                  <ul className="space-y-1 text-sm text-yellow-800">
+                    <li>• Always use a spotter when lifting heavy weights</li>
+                    <li>
+                      • Keep your wrists straight and aligned with your forearms
+                    </li>
+                    <li>• Don't bounce the bar off your chest</li>
+                    <li>• Stop immediately if you feel sharp pain</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl shadow-md p-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">
+                Recommended Sets & Reps
+              </h2>
+              <div className="space-y-4">
+                <div className="p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg border border-indigo-200">
+                  <h3 className="font-bold text-indigo-900 mb-2">
+                    For Strength
+                  </h3>
+                  <p className="text-indigo-800">4-6 sets × 4-6 reps</p>
+                  <p className="text-sm text-indigo-600 mt-1">
+                    Heavy weight, longer rest (3-5 min)
+                  </p>
+                </div>
+                <div className="p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg border border-blue-200">
+                  <h3 className="font-bold text-blue-900 mb-2">
+                    For Hypertrophy
+                  </h3>
+                  <p className="text-blue-800">3-4 sets × 8-12 reps</p>
+                  <p className="text-sm text-blue-600 mt-1">
+                    Moderate weight, medium rest (60-90s)
+                  </p>
+                </div>
+                <div className="p-4 bg-gradient-to-r from-green-50 to-teal-50 rounded-lg border border-green-200">
+                  <h3 className="font-bold text-green-900 mb-2">
+                    For Endurance
+                  </h3>
+                  <p className="text-green-800">2-3 sets × 15-20 reps</p>
+                  <p className="text-sm text-green-600 mt-1">
+                    Light weight, short rest (30-60s)
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-md p-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">
+                Common Mistakes
+              </h2>
+              <div className="space-y-3">
+                {[
+                  "Bouncing the bar off the chest",
+                  "Lifting the buttocks off the bench",
+                  "Flaring elbows too wide",
+                  "Uneven bar path",
+                  "Not using full range of motion",
+                ].map((mistake, i) => (
+                  <div
+                    key={i}
+                    className="flex items-start space-x-3 p-3 bg-red-50 border border-red-100 rounded-lg"
+                  >
+                    <X className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                    <span className="text-sm text-red-900">{mistake}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-md p-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">
+                Alternative Exercises
+              </h2>
+              <div className="space-y-2">
+                {[
+                  "Dumbbell Bench Press",
+                  "Incline Bench Press",
+                  "Push-Ups",
+                  "Chest Press Machine",
+                ].map((alt, i) => (
+                  <button
+                    key={i}
+                    className="w-full text-left p-3 border border-gray-200 rounded-lg hover:border-indigo-500 hover:bg-indigo-50 transition flex items-center justify-between group"
+                  >
+                    <span className="font-medium text-gray-900">{alt}</span>
+                    <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-indigo-600 transition" />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl shadow-md p-6 text-white">
+              <h3 className="text-lg font-bold mb-4">Your Progress</h3>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span>Best Weight</span>
+                  <span className="text-2xl font-bold">80 kg</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Times Performed</span>
+                  <span className="text-2xl font-bold">24</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Last Performed</span>
+                  <span className="font-medium">2 days ago</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Food Photo Upload Screen
+  const FoodUploadScreen = () => (
+    <div className="min-h-screen bg-gray-50">
+      <Navigation active="nutrition" />
+
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <button
+          onClick={() => setCurrentScreen("nutrition")}
+          className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 mb-6 transition"
+        >
+          <ChevronRight className="w-5 h-5 rotate-180" />
+          <span>Back to Nutrition</span>
+        </button>
+
+        <div className="bg-white rounded-xl shadow-md p-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Add Meal</h1>
+          <p className="text-gray-600 mb-8">
+            Upload a photo or enter details manually
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            <button
+              onClick={() => setCurrentScreen("food-upload")}
+              className="border-2 border-dashed border-gray-300 rounded-xl p-8 hover:border-indigo-500 hover:bg-indigo-50 transition cursor-pointer text-center"
+            >
+              <Camera className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                Take Photo
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Use your camera to capture your meal
+              </p>
+              <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-indigo-700 hover:to-purple-700 transition inline-block">
+                Open Camera
+              </div>
+            </button>
+
+            <button
+              onClick={() => setCurrentScreen("food-upload")}
+              className="border-2 border-dashed border-gray-300 rounded-xl p-8 hover:border-indigo-500 hover:bg-indigo-50 transition cursor-pointer text-center"
+            >
+              <Upload className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                Upload Photo
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Select a photo from your gallery
+              </p>
+              <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-indigo-700 hover:to-purple-700 transition inline-block">
+                Choose File
+              </div>
+            </button>
+          </div>
+
+          <div className="relative mb-8">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-4 bg-white text-gray-500">
+                Or enter manually
+              </span>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Meal Type
+                </label>
+                <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none">
+                  <option>Breakfast</option>
+                  <option>Lunch</option>
+                  <option>Dinner</option>
+                  <option>Snack</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Time
+                </label>
+                <input
+                  type="time"
+                  defaultValue="12:00"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Food Items
+              </label>
+              <textarea
+                placeholder="e.g., Grilled chicken breast, Brown rice, Broccoli"
+                rows="3"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+              ></textarea>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Calories
+                </label>
+                <input
+                  type="number"
+                  placeholder="580"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Protein (g)
+                </label>
+                <input
+                  type="number"
+                  placeholder="45"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Carbs (g)
+                </label>
+                <input
+                  type="number"
+                  placeholder="60"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Fats (g)
+                </label>
+                <input
+                  type="number"
+                  placeholder="15"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                />
+              </div>
+            </div>
+
+            <div className="flex space-x-4">
+              <button className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-lg font-semibold hover:from-indigo-700 hover:to-purple-700 transition">
+                Save Meal
+              </button>
+              <button
+                onClick={() => setCurrentScreen("nutrition")}
+                className="px-8 py-4 border-2 border-gray-300 rounded-lg font-semibold hover:border-gray-400 hover:bg-gray-50 transition"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-6 bg-indigo-50 border border-indigo-200 rounded-xl p-6">
+          <h3 className="font-bold text-indigo-900 mb-2 flex items-center">
+            <Info className="w-5 h-5 mr-2" />
+            AI Calorie Estimation
+          </h3>
+          <p className="text-sm text-indigo-800">
+            Our ML model analyzes your food photos to estimate calories and
+            macronutrients. You can always review and adjust the estimates
+            before saving.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Workout History Screen
+  const WorkoutHistoryScreen = () => (
+    <div className="min-h-screen bg-gray-50">
+      <Navigation active="progress" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Workout History
+            </h1>
+            <p className="text-gray-600">
+              Review your past workouts and performance
+            </p>
+          </div>
+          <div className="flex space-x-3">
+            <select className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
+              <option>All Workouts</option>
+              <option>Upper Body</option>
+              <option>Lower Body</option>
+              <option>Push</option>
+              <option>Pull</option>
+              <option>Legs</option>
+            </select>
+            <select className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
+              <option>Last 30 Days</option>
+              <option>Last 90 Days</option>
+              <option>Last 6 Months</option>
+              <option>All Time</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          {[
+            {
+              date: "Oct 17, 2025",
+              type: "Push Day",
+              duration: "45 min",
+              exercises: 5,
+              calories: 310,
+              avgRPE: 7,
+              completed: true,
+            },
+            {
+              date: "Oct 16, 2025",
+              type: "Lower Body",
+              duration: "50 min",
+              exercises: 6,
+              calories: 380,
+              avgRPE: 8,
+              completed: true,
+            },
+            {
+              date: "Oct 14, 2025",
+              type: "Upper Body",
+              duration: "45 min",
+              exercises: 5,
+              calories: 295,
+              avgRPE: 7,
+              completed: true,
+            },
+            {
+              date: "Oct 13, 2025",
+              type: "Pull Day",
+              duration: "48 min",
+              exercises: 6,
+              calories: 325,
+              avgRPE: 7,
+              completed: true,
+            },
+            {
+              date: "Oct 11, 2025",
+              type: "Legs & Core",
+              duration: "55 min",
+              exercises: 7,
+              calories: 410,
+              avgRPE: 9,
+              completed: true,
+            },
+          ].map((workout, i) => (
+            <div
+              key={i}
+              className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <div className="flex items-center space-x-3 mb-2">
+                    <h3 className="text-xl font-bold text-gray-900">
+                      {workout.type}
+                    </h3>
+                    <CheckCircle className="w-5 h-5 text-green-600" />
+                  </div>
+                  <p className="text-gray-600">{workout.date}</p>
+                </div>
+                <button className="px-4 py-2 border-2 border-indigo-600 text-indigo-600 rounded-lg font-medium hover:bg-indigo-50 transition">
+                  View Details
+                </button>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                <div className="text-center p-3 bg-gray-50 rounded-lg">
+                  <Clock className="w-5 h-5 text-gray-400 mx-auto mb-1" />
+                  <div className="text-lg font-bold text-gray-900">
+                    {workout.duration}
+                  </div>
+                  <div className="text-xs text-gray-600">Duration</div>
+                </div>
+                <div className="text-center p-3 bg-gray-50 rounded-lg">
+                  <Dumbbell className="w-5 h-5 text-gray-400 mx-auto mb-1" />
+                  <div className="text-lg font-bold text-gray-900">
+                    {workout.exercises}
+                  </div>
+                  <div className="text-xs text-gray-600">Exercises</div>
+                </div>
+                <div className="text-center p-3 bg-orange-50 rounded-lg">
+                  <Zap className="w-5 h-5 text-orange-500 mx-auto mb-1" />
+                  <div className="text-lg font-bold text-orange-600">
+                    {workout.calories}
+                  </div>
+                  <div className="text-xs text-gray-600">Calories</div>
+                </div>
+                <div className="text-center p-3 bg-indigo-50 rounded-lg">
+                  <TrendingUp className="w-5 h-5 text-indigo-500 mx-auto mb-1" />
+                  <div className="text-lg font-bold text-indigo-600">
+                    {workout.avgRPE}/10
+                  </div>
+                  <div className="text-xs text-gray-600">Avg RPE</div>
+                </div>
+                <div className="text-center p-3 bg-green-50 rounded-lg">
+                  <CheckCircle className="w-5 h-5 text-green-500 mx-auto mb-1" />
+                  <div className="text-lg font-bold text-green-600">100%</div>
+                  <div className="text-xs text-gray-600">Complete</div>
+                </div>
+              </div>
+
+              <div className="mt-4 pt-4 border-t border-gray-200">
+                <h4 className="text-sm font-semibold text-gray-700 mb-2">
+                  Exercises Performed:
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    "Bench Press",
+                    "Shoulder Press",
+                    "Tricep Dips",
+                    "Cable Flyes",
+                    "Push-ups",
+                  ].map((ex, j) => (
+                    <span
+                      key={j}
+                      className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
+                    >
+                      {ex}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-8 text-center">
+          <button className="px-8 py-3 border-2 border-gray-300 rounded-lg font-semibold hover:border-indigo-500 hover:bg-indigo-50 transition">
+            Load More Workouts
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Settings Screen
+  const SettingsScreen = () => (
+    <div className="min-h-screen bg-gray-50">
+      <Navigation active="profile" />
+
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">Settings</h1>
+
+        <div className="space-y-6">
+          <div className="bg-white rounded-xl shadow-md p-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">
+              Notification Preferences
+            </h2>
+            <div className="space-y-4">
+              <SettingRow
+                icon={Bell}
+                label="Push Notifications"
+                description="Receive push notifications on your device"
+              >
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="sr-only peer"
+                    defaultChecked
+                  />
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                </label>
+              </SettingRow>
+
+              <SettingRow
+                icon={Calendar}
+                label="Workout Reminders"
+                description="Daily reminders for scheduled workouts"
+              >
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="sr-only peer"
+                    defaultChecked
+                  />
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                </label>
+              </SettingRow>
+
+              <SettingRow
+                icon={Award}
+                label="Achievement Notifications"
+                description="Get notified when you unlock achievements"
+              >
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="sr-only peer"
+                    defaultChecked
+                  />
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                </label>
+              </SettingRow>
+
+              <div className="pt-4 border-t border-gray-200">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Reminder Time
+                </label>
+                <input
+                  type="time"
+                  defaultValue="08:00"
+                  className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-md p-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">
+              Workout Preferences
+            </h2>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Default Rest Timer (seconds)
+                </label>
+                <input
+                  type="number"
+                  defaultValue="90"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Weight Unit
+                </label>
+                <div className="flex space-x-3">
+                  <button className="flex-1 py-3 border-2 border-indigo-600 bg-indigo-50 text-indigo-600 rounded-lg font-medium">
+                    Kilograms (kg)
+                  </button>
+                  <button className="flex-1 py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-medium hover:border-gray-400">
+                    Pounds (lbs)
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between py-3">
+                <div>
+                  <div className="font-medium text-gray-900">
+                    Auto-play Exercise Videos
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    Videos play automatically when viewing exercises
+                  </div>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" className="sr-only peer" />
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-md p-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">
+              Privacy & Data
+            </h2>
+            <div className="space-y-4">
+              <button className="w-full text-left p-4 border border-gray-200 rounded-lg hover:border-indigo-300 hover:bg-indigo-50 transition flex items-center justify-between">
+                <div>
+                  <div className="font-medium text-gray-900">
+                    Download My Data
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    Export all your workout and nutrition data
+                  </div>
+                </div>
+                <Download className="w-5 h-5 text-gray-400" />
+              </button>
+
+              <button className="w-full text-left p-4 border border-gray-200 rounded-lg hover:border-indigo-300 hover:bg-indigo-50 transition flex items-center justify-between">
+                <div>
+                  <div className="font-medium text-gray-900">
+                    Privacy Policy
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    View our privacy policy and data usage
+                  </div>
+                </div>
+                <ChevronRight className="w-5 h-5 text-gray-400" />
+              </button>
+
+              <button className="w-full text-left p-4 border border-gray-200 rounded-lg hover:border-indigo-300 hover:bg-indigo-50 transition flex items-center justify-between">
+                <div>
+                  <div className="font-medium text-gray-900">
+                    Terms of Service
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    Read our terms and conditions
+                  </div>
+                </div>
+                <ChevronRight className="w-5 h-5 text-gray-400" />
+              </button>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-md p-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Account</h2>
+            <div className="space-y-3">
+              <button className="w-full text-left p-4 border border-gray-200 rounded-lg hover:border-indigo-300 hover:bg-indigo-50 transition flex items-center justify-between">
+                <div>
+                  <div className="font-medium text-gray-900">
+                    Change Password
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    Update your account password
+                  </div>
+                </div>
+                <ChevronRight className="w-5 h-5 text-gray-400" />
+              </button>
+
+              <button className="w-full text-left p-4 border border-gray-200 rounded-lg hover:border-red-300 hover:bg-red-50 transition flex items-center justify-between">
+                <div>
+                  <div className="font-medium text-red-600">Delete Account</div>
+                  <div className="text-sm text-red-600">
+                    Permanently delete your account and data
+                  </div>
+                </div>
+                <ChevronRight className="w-5 h-5 text-red-400" />
+              </button>
+
+              <button
+                onClick={() => setCurrentScreen("login")}
+                className="w-full text-left p-4 border border-gray-200 rounded-lg hover:border-gray-300 hover:bg-gray-50 transition flex items-center justify-between"
+              >
+                <div>
+                  <div className="font-medium text-gray-900">Sign Out</div>
+                  <div className="text-sm text-gray-600">
+                    Sign out of your account
+                  </div>
+                </div>
+                <LogOut className="w-5 h-5 text-gray-400" />
+              </button>
+            </div>
+          </div>
+
+          <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-6">
+            <h3 className="font-bold text-indigo-900 mb-2">App Version</h3>
+            <p className="text-indigo-800">FitRX v1.1.0</p>
+            <p className="text-sm text-indigo-600 mt-2">
+              You're using the latest version
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Onboarding Screen - Continued
+  const OnboardingScreenContinued = () => (
+    <div className="min-h-screen bg-gray-50 p-4">
+      <div className="max-w-2xl mx-auto py-8">
+        <div className="bg-white rounded-2xl shadow-lg p-8">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Complete Your Profile
+            </h1>
+            <p className="text-gray-600">
+              Help us personalize your fitness journey
+            </p>
+          </div>
+
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Full Name*
+                </label>
+                <input
+                  type="text"
+                  placeholder="John Doe"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Age*
+                </label>
+                <input
+                  type="number"
+                  placeholder="25"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Height (cm)*
+                </label>
+                <input
+                  type="number"
+                  placeholder="175"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Weight (kg)*
+                </label>
+                <input
+                  type="number"
+                  placeholder="70"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Gender*
+                </label>
+                <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none">
+                  <option>Male</option>
+                  <option>Female</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Fitness Goals* (Select up to 5)
+              </label>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {[
+                  "Weight Loss",
+                  "Muscle Gain",
+                  "Strength",
+                  "Endurance",
+                  "Flexibility",
+                  "General Fitness",
+                ].map((goal) => (
+                  <label
+                    key={goal}
+                    className="flex items-center space-x-2 p-3 border border-gray-300 rounded-lg hover:bg-indigo-50 cursor-pointer transition"
+                  >
+                    <input
+                      type="checkbox"
+                      className="rounded border-gray-300"
+                    />
+                    <span className="text-sm">{goal}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Fitness Level*
+              </label>
+              <div className="grid grid-cols-3 gap-3">
+                {["Beginner", "Intermediate", "Advanced"].map((level) => (
+                  <button
+                    key={level}
+                    className="px-4 py-3 border-2 border-gray-300 rounded-lg hover:border-indigo-500 hover:bg-indigo-50 transition"
+                  >
+                    {level}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Available Equipment*
+              </label>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {[
+                  "Dumbbells",
+                  "Barbell",
+                  "Resistance Bands",
+                  "Pull-up Bar",
+                  "Bench",
+                  "None",
+                ].map((equip) => (
+                  <label
+                    key={equip}
+                    className="flex items-center space-x-2 p-3 border border-gray-300 rounded-lg hover:bg-indigo-50 cursor-pointer transition"
+                  >
+                    <input
+                      type="checkbox"
+                      className="rounded border-gray-300"
+                    />
+                    <span className="text-sm">{equip}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Workout Frequency (days/week)*
+              </label>
+              <input
+                type="range"
+                min="1"
+                max="7"
+                defaultValue="3"
+                className="w-full"
+              />
+              <div className="flex justify-between text-sm text-gray-600 mt-2">
+                <span>1 day</span>
+                <span>7 days</span>
+              </div>
+            </div>
+
+            <div className="flex items-start space-x-2">
+              <input type="checkbox" className="mt-1 rounded border-gray-300" />
+              <label className="text-sm text-gray-600">
+                I agree to the{" "}
+                <a href="#" className="text-indigo-600 hover:underline">
+                  Terms of Service
+                </a>{" "}
+                and{" "}
+                <a href="#" className="text-indigo-600 hover:underline">
+                  Privacy Policy
+                </a>
+                . I understand I should consult a physician before beginning any
+                exercise program.
+              </label>
+            </div>
+          </div>
+
+          <button
+            onClick={() => setCurrentScreen("dashboard")}
+            className="w-full mt-8 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-lg font-semibold hover:from-indigo-700 hover:to-purple-700 transition"
+          >
+            Complete Setup & Start Your Journey
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Dashboard Screen
+  const DashboardScreen = () => (
+    <div className="min-h-screen bg-gray-50">
+      <Navigation active="dashboard" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Welcome back, John! 💪
+          </h1>
+          <p className="text-gray-600">Ready for your workout today?</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <StatCard
+            icon={Zap}
+            title="Calories Burned"
+            value="1,240"
+            subtitle="This week"
+            color="orange"
+          />
+          <StatCard
+            icon={Award}
+            title="Workouts"
+            value="12"
+            subtitle="This month"
+            color="blue"
+          />
+          <StatCard
+            icon={TrendingUp}
+            title="Strength Index"
+            value="78"
+            subtitle="+5 from last week"
+            color="green"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-bold text-gray-900">
+                  Today's Workout
+                </h2>
+                <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium">
+                  Upper Body
+                </span>
+              </div>
+
+              <div className="space-y-3 mb-6">
+                <ExerciseItem
+                  name="Bench Press"
+                  sets="4 sets × 8 reps"
+                  difficulty="Moderate"
+                />
+                <ExerciseItem
+                  name="Dumbbell Rows"
+                  sets="3 sets × 10 reps"
+                  difficulty="Moderate"
+                />
+                <ExerciseItem
+                  name="Shoulder Press"
+                  sets="3 sets × 10 reps"
+                  difficulty="Easy"
+                />
+                <ExerciseItem
+                  name="Bicep Curls"
+                  sets="3 sets × 12 reps"
+                  difficulty="Easy"
+                />
+              </div>
+
+              <div className="flex space-x-3">
+                <button
+                  onClick={() => setCurrentScreen("workout-execution")}
+                  className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-lg font-semibold hover:from-indigo-700 hover:to-purple-700 transition flex items-center justify-center space-x-2"
+                >
+                  <Play className="w-5 h-5" />
+                  <span>Start Workout</span>
+                </button>
+                <button className="px-6 py-3 border-2 border-gray-300 rounded-lg font-semibold hover:border-indigo-500 hover:bg-indigo-50 transition">
+                  Modify
+                </button>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-md p-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">
+                Weekly Progress
+              </h2>
+              <div className="h-64 flex items-end justify-between space-x-2">
+                {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(
+                  (day, i) => (
+                    <div
+                      key={day}
+                      className="flex-1 flex flex-col items-center"
+                    >
+                      <div
+                        className="w-full bg-gradient-to-t from-indigo-600 to-purple-600 rounded-t-lg"
+                        style={{ height: `${[60, 80, 70, 90, 75, 0, 0][i]}%` }}
+                      ></div>
+                      <span className="text-xs text-gray-600 mt-2">{day}</span>
+                    </div>
+                  )
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl shadow-md p-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">
+                Quick Stats
+              </h2>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-600">Avg RPE</span>
+                  <span className="text-2xl font-bold text-indigo-600">
+                    7.2
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-600">Completion Rate</span>
+                  <span className="text-2xl font-bold text-green-600">94%</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-600">Streak</span>
+                  <span className="text-2xl font-bold text-orange-600">
+                    5 days
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl shadow-md p-6 text-white">
+              <Target className="w-12 h-12 mb-3" />
+              <h3 className="text-xl font-bold mb-2">Weekly Goal</h3>
+              <p className="text-indigo-100 mb-4">
+                Complete 5 workouts this week
+              </p>
+              <div className="w-full bg-white/20 rounded-full h-2 mb-2">
+                <div
+                  className="bg-white rounded-full h-2"
+                  style={{ width: "80%" }}
+                ></div>
+              </div>
+              <p className="text-sm text-indigo-100">4 of 5 completed</p>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-md p-6">
+              <h3 className="font-bold text-gray-900 mb-3">Upcoming</h3>
+              <div className="space-y-3">
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-indigo-600 rounded-full"></div>
+                  <div>
+                    <p className="font-medium text-sm">Rest Day</p>
+                    <p className="text-xs text-gray-500">Tomorrow</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-green-600 rounded-full"></div>
+                  <div>
+                    <p className="font-medium text-sm">Lower Body</p>
+                    <p className="text-xs text-gray-500">In 2 days</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Workout Execution Screen
+  const WorkoutExecutionScreen = () => (
+    <div className="min-h-screen bg-gray-50">
+      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-4">
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
+          <button
+            onClick={() => setCurrentScreen("dashboard")}
+            className="p-2 hover:bg-white/10 rounded-lg transition"
+          >
+            <X className="w-6 h-6" />
+          </button>
+          <div className="text-center">
+            <h1 className="text-xl font-bold">Upper Body Workout</h1>
+            <p className="text-indigo-100 text-sm">Exercise 1 of 4</p>
+          </div>
+          <div className="w-10"></div>
+        </div>
+      </div>
+
+      <div className="max-w-4xl mx-auto p-4">
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
+          <div className="aspect-video bg-gray-900 relative">
+            <img
+              src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=800"
+              alt="Exercise"
+              className="w-full h-full object-cover"
+            />
+            <button className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/50 transition">
+              <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center">
+                <Play className="w-10 h-10 text-indigo-600 ml-2" />
+              </div>
+            </button>
+          </div>
+
+          <div className="p-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              Bench Press
+            </h2>
+            <div className="flex items-center space-x-4 mb-4">
+              <span className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-medium">
+                Moderate
+              </span>
+              <span className="text-gray-600">4 sets × 8 reps</span>
+              <span className="text-gray-600">Chest, Triceps</span>
+            </div>
+
+            <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4 mb-6">
+              <h3 className="font-bold text-indigo-900 mb-2 flex items-center">
+                <Info className="w-5 h-5 mr-2" />
+                Form Cues
+              </h3>
+              <ul className="space-y-1 text-sm text-indigo-800">
+                <li>• Keep your feet flat on the ground</li>
+                <li>• Maintain a slight arch in your lower back</li>
+                <li>• Lower the bar to mid-chest level</li>
+                <li>• Press up in a controlled manner</li>
+              </ul>
+            </div>
+
+            <div className="grid grid-cols-4 gap-4 mb-6">
+              {[1, 2, 3, 4].map((set) => (
+                <div
+                  key={set}
+                  className="text-center p-4 border-2 border-gray-300 rounded-lg"
+                >
+                  <div className="text-2xl font-bold text-gray-900">{set}</div>
+                  <div className="text-xs text-gray-500">Set</div>
+                  <CheckCircle className="w-6 h-6 text-green-500 mx-auto mt-2" />
+                </div>
+              ))}
+            </div>
+
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Rate of Perceived Exertion (RPE)
+              </label>
+              <div className="flex items-center space-x-2">
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+                  <button
+                    key={num}
+                    className="flex-1 py-2 border-2 border-gray-300 rounded-lg hover:border-indigo-500 hover:bg-indigo-50 transition font-medium"
+                  >
+                    {num}
+                  </button>
+                ))}
+              </div>
+              <div className="flex justify-between text-xs text-gray-500 mt-2">
+                <span>Easy</span>
+                <span>Moderate</span>
+                <span>Very Hard</span>
+              </div>
+            </div>
+
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+              <h3 className="font-bold text-yellow-900 mb-2">Rest Timer</h3>
+              <div className="text-4xl font-bold text-center text-yellow-900 mb-3">
+                01:30
+              </div>
+              <div className="flex space-x-3">
+                <button className="flex-1 py-2 bg-yellow-600 text-white rounded-lg font-medium hover:bg-yellow-700 transition">
+                  Start
+                </button>
+                <button className="flex-1 py-2 border-2 border-yellow-600 text-yellow-600 rounded-lg font-medium hover:bg-yellow-50 transition">
+                  Reset
+                </button>
+              </div>
+            </div>
+
+            <div className="flex space-x-3">
+              <button className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-lg font-semibold hover:from-indigo-700 hover:to-purple-700 transition flex items-center justify-center space-x-2">
+                <CheckCircle className="w-5 h-5" />
+                <span>Complete Exercise</span>
+              </button>
+              <button className="px-6 py-4 border-2 border-gray-300 rounded-lg font-semibold hover:border-red-500 hover:bg-red-50 hover:text-red-600 transition flex items-center space-x-2">
+                <SkipForward className="w-5 h-5" />
+                <span>Skip</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Nutrition Tracking Screen
+  const NutritionScreen = () => (
+    <div className="min-h-screen bg-gray-50">
+      <Navigation active="nutrition" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Nutrition Tracking
+            </h1>
+            <p className="text-gray-600">Track your meals and calories</p>
+          </div>
+          <button className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-indigo-700 hover:to-purple-700 transition flex items-center space-x-2">
+            <Upload className="w-5 h-5" />
+            <span>Add Meal</span>
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white rounded-xl shadow-md p-6">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-gray-600">Calories</span>
+              <Apple className="w-5 h-5 text-red-500" />
+            </div>
+            <div className="text-3xl font-bold text-gray-900 mb-1">1,847</div>
+            <div className="text-sm text-gray-500">of 2,200 goal</div>
+            <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
+              <div
+                className="bg-gradient-to-r from-red-500 to-orange-500 rounded-full h-2"
+                style={{ width: "84%" }}
+              ></div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-md p-6">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-gray-600">Protein</span>
+              <span className="text-2xl">🥩</span>
+            </div>
+            <div className="text-3xl font-bold text-gray-900 mb-1">142g</div>
+            <div className="text-sm text-gray-500">of 165g goal</div>
+            <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
+              <div
+                className="bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full h-2"
+                style={{ width: "86%" }}
+              ></div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-md p-6">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-gray-600">Carbs</span>
+              <span className="text-2xl">🍞</span>
+            </div>
+            <div className="text-3xl font-bold text-gray-900 mb-1">203g</div>
+            <div className="text-sm text-gray-500">of 250g goal</div>
+            <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
+              <div
+                className="bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full h-2"
+                style={{ width: "81%" }}
+              ></div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-md p-6">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-gray-600">Fats</span>
+              <span className="text-2xl">🥑</span>
+            </div>
+            <div className="text-3xl font-bold text-gray-900 mb-1">58g</div>
+            <div className="text-sm text-gray-500">of 70g goal</div>
+            <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
+              <div
+                className="bg-gradient-to-r from-green-500 to-teal-500 rounded-full h-2"
+                style={{ width: "83%" }}
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">
+                Today's Meals
+              </h2>
+
+              <div className="space-y-4">
+                <MealItem
+                  meal="Breakfast"
+                  time="8:30 AM"
+                  items={["Oatmeal with berries", "Greek yogurt", "Banana"]}
+                  calories={450}
+                />
+                <MealItem
+                  meal="Lunch"
+                  time="1:00 PM"
+                  items={["Grilled chicken breast", "Brown rice", "Broccoli"]}
+                  calories={580}
+                />
+                <MealItem
+                  meal="Snack"
+                  time="4:30 PM"
+                  items={["Protein shake", "Apple"]}
+                  calories={320}
+                />
+                <MealItem
+                  meal="Dinner"
+                  time="7:45 PM"
+                  items={["Salmon", "Sweet potato", "Mixed vegetables"]}
+                  calories={497}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl shadow-md p-6">
+              <h3 className="font-bold text-gray-900 mb-4">Quick Add</h3>
+
+              <div className="space-y-3 mb-4">
+                <button
+                  onClick={() => setCurrentScreen("food-upload")}
+                  className="w-full p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-indigo-500 hover:bg-indigo-50 transition text-left"
+                >
+                  <div className="flex items-center space-x-3">
+                    <Camera className="w-6 h-6 text-gray-400" />
+                    <div>
+                      <div className="font-medium text-gray-900">
+                        Scan Food Photo
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        AI calorie estimation
+                      </div>
+                    </div>
+                  </div>
+                </button>
+
+                <button
+                  onClick={() => setCurrentScreen("food-upload")}
+                  className="w-full p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-indigo-500 hover:bg-indigo-50 transition text-left"
+                >
+                  <div className="flex items-center space-x-3">
+                    <Edit className="w-6 h-6 text-gray-400" />
+                    <div>
+                      <div className="font-medium text-gray-900">
+                        Manual Entry
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        Enter food details
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-md p-6">
+              <h3 className="font-bold text-gray-900 mb-4">Weekly Summary</h3>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-600">Avg Daily Calories</span>
+                  <span className="font-bold text-gray-900">2,104</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-600">Days on Track</span>
+                  <span className="font-bold text-green-600">5/7</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-600">Net Calories</span>
+                  <span className="font-bold text-indigo-600">-1,240</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-br from-green-500 to-teal-600 rounded-xl shadow-md p-6 text-white">
+              <Heart className="w-10 h-10 mb-3" />
+              <h3 className="text-lg font-bold mb-2">Hydration Goal</h3>
+              <p className="text-green-100 text-sm mb-3">
+                6 of 8 glasses today
+              </p>
+              <div className="flex space-x-1">
+                {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                  <div
+                    key={i}
+                    className={`flex-1 h-2 rounded-full ${
+                      i <= 6 ? "bg-white" : "bg-white/30"
+                    }`}
+                  ></div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Progress Screen
+  const ProgressScreen = () => (
+    <div className="min-h-screen bg-gray-50">
+      <Navigation active="progress" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Progress & Reports
+            </h1>
+            <p className="text-gray-600">Track your fitness journey</p>
+          </div>
+          <div className="flex space-x-3">
+            <select className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
+              <option>Last 7 Days</option>
+              <option>Last 30 Days</option>
+              <option>Last 3 Months</option>
+              <option>Last Year</option>
+            </select>
+            <button className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:from-indigo-700 hover:to-purple-700 transition flex items-center space-x-2">
+              <Download className="w-5 h-5" />
+              <span>Export PDF</span>
+            </button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-indigo-500">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-gray-600 text-sm">Total Workouts</span>
+              <BarChart3 className="w-5 h-5 text-indigo-500" />
+            </div>
+            <div className="text-3xl font-bold text-gray-900">48</div>
+            <div className="text-sm text-green-600 mt-1">+12 this month</div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-orange-500">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-gray-600 text-sm">Calories Burned</span>
+              <Zap className="w-5 h-5 text-orange-500" />
+            </div>
+            <div className="text-3xl font-bold text-gray-900">12.4k</div>
+            <div className="text-sm text-green-600 mt-1">+2.1k this month</div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-gray-600 text-sm">Strength Index</span>
+              <Award className="w-5 h-5 text-green-500" />
+            </div>
+            <div className="text-3xl font-bold text-gray-900">78</div>
+            <div className="text-sm text-green-600 mt-1">+5 improvement</div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-purple-500">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-gray-600 text-sm">Avg RPE</span>
+              <TrendingUp className="w-5 h-5 text-purple-500" />
+            </div>
+            <div className="text-3xl font-bold text-gray-900">7.2</div>
+            <div className="text-sm text-gray-600 mt-1">Optimal range</div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <div className="bg-white rounded-xl shadow-md p-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">
+              Strength Index Trend
+            </h2>
+            <div className="h-64 flex items-end justify-between">
+              {[62, 65, 68, 70, 72, 75, 78].map((val, i) => (
+                <div key={i} className="flex-1 flex flex-col items-center mx-1">
+                  <div className="relative w-full">
+                    <div
+                      className="w-full bg-gradient-to-t from-indigo-600 to-purple-600 rounded-t-lg"
+                      style={{ height: `${val * 2}px` }}
+                    ></div>
+                    <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-bold text-gray-900">
+                      {val}
+                    </span>
+                  </div>
+                  <span className="text-xs text-gray-600 mt-2">W{i + 1}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-md p-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">
+              Workout Completion Rate
+            </h2>
+            <div className="flex items-center justify-center h-64">
+              <div className="relative">
+                <svg className="w-48 h-48 transform -rotate-90">
+                  <circle
+                    cx="96"
+                    cy="96"
+                    r="80"
+                    fill="none"
+                    stroke="#e5e7eb"
+                    strokeWidth="16"
+                  />
+                  <circle
+                    cx="96"
+                    cy="96"
+                    r="80"
+                    fill="none"
+                    stroke="url(#gradient)"
+                    strokeWidth="16"
+                    strokeDasharray={`${2 * Math.PI * 80 * 0.94} ${
+                      2 * Math.PI * 80
+                    }`}
+                    strokeLinecap="round"
+                  />
+                  <defs>
+                    <linearGradient
+                      id="gradient"
+                      x1="0%"
+                      y1="0%"
+                      x2="100%"
+                      y2="100%"
+                    >
+                      <stop offset="0%" stopColor="#6366f1" />
+                      <stop offset="100%" stopColor="#a855f7" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="text-4xl font-bold text-gray-900">94%</div>
+                    <div className="text-sm text-gray-600">Complete</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 bg-white rounded-xl shadow-md p-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">
+              Exercise History
+            </h2>
+            <div className="space-y-3">
+              {[
+                {
+                  exercise: "Bench Press",
+                  date: "Oct 17, 2025",
+                  sets: "4×8",
+                  weight: "80kg",
+                  rpe: 7,
+                },
+                {
+                  exercise: "Squats",
+                  date: "Oct 16, 2025",
+                  sets: "5×5",
+                  weight: "100kg",
+                  rpe: 8,
+                },
+                {
+                  exercise: "Deadlift",
+                  date: "Oct 15, 2025",
+                  sets: "3×6",
+                  weight: "120kg",
+                  rpe: 9,
+                },
+                {
+                  exercise: "Shoulder Press",
+                  date: "Oct 14, 2025",
+                  sets: "3×10",
+                  weight: "30kg",
+                  rpe: 6,
+                },
+              ].map((ex, i) => (
+                <div
+                  key={i}
+                  className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-indigo-300 hover:bg-indigo-50 transition"
+                >
+                  <div className="flex-1">
+                    <div className="font-bold text-gray-900">{ex.exercise}</div>
+                    <div className="text-sm text-gray-600">{ex.date}</div>
+                  </div>
+                  <div className="flex items-center space-x-6 text-sm">
+                    <div>
+                      <div className="text-gray-600">Sets</div>
+                      <div className="font-bold text-gray-900">{ex.sets}</div>
+                    </div>
+                    <div>
+                      <div className="text-gray-600">Weight</div>
+                      <div className="font-bold text-gray-900">{ex.weight}</div>
+                    </div>
+                    <div>
+                      <div className="text-gray-600">RPE</div>
+                      <div className="font-bold text-indigo-600">
+                        {ex.rpe}/10
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl shadow-md p-6">
+              <h3 className="font-bold text-gray-900 mb-4">Achievements</h3>
+              <div className="space-y-3">
+                <div className="flex items-center space-x-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                  <Award className="w-8 h-8 text-yellow-600" />
+                  <div>
+                    <div className="font-bold text-sm text-gray-900">
+                      5 Day Streak
+                    </div>
+                    <div className="text-xs text-gray-600">Keep it up!</div>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <Target className="w-8 h-8 text-blue-600" />
+                  <div>
+                    <div className="font-bold text-sm text-gray-900">
+                      50 Workouts
+                    </div>
+                    <div className="text-xs text-gray-600">
+                      Milestone reached
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                  <Zap className="w-8 h-8 text-green-600" />
+                  <div>
+                    <div className="font-bold text-sm text-gray-900">
+                      10k Calories
+                    </div>
+                    <div className="text-xs text-gray-600">
+                      Burned this month
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-md p-6">
+              <h3 className="font-bold text-gray-900 mb-4">
+                Body Measurements
+              </h3>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-600">Weight</span>
+                  <span className="font-bold text-gray-900">70 kg</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-600">BMI</span>
+                  <span className="font-bold text-green-600">22.9</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-600">Body Fat</span>
+                  <span className="font-bold text-gray-900">18%</span>
+                </div>
+              </div>
+              <button className="w-full mt-4 py-2 border-2 border-indigo-600 text-indigo-600 rounded-lg font-medium hover:bg-indigo-50 transition">
+                Update Measurements
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Profile Screen
+  const ProfileScreen = () => (
+    <div className="min-h-screen bg-gray-50">
+      <Navigation active="profile" />
+
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="bg-white rounded-xl shadow-md overflow-hidden mb-6">
+          <div className="h-32 bg-gradient-to-r from-indigo-600 to-purple-600"></div>
+          <div className="px-6 pb-6">
+            <div className="flex items-end space-x-4 -mt-16 mb-6">
+              <div className="w-32 h-32 bg-white rounded-full border-4 border-white shadow-lg flex items-center justify-center text-4xl font-bold text-indigo-600">
+                JD
+              </div>
+              <div className="pb-4 flex-1">
+                <h1 className="text-2xl font-bold text-gray-900">John Doe</h1>
+                <p className="text-gray-600">Member since August 2025</p>
+              </div>
+              <button className="px-6 py-2 border-2 border-indigo-600 text-indigo-600 rounded-lg font-medium hover:bg-indigo-50 transition mb-4">
+                Edit Profile
+              </button>
+            </div>
+
+            <div className="grid grid-cols-4 gap-4 pt-6 border-t border-gray-200">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-gray-900">48</div>
+                <div className="text-sm text-gray-600">Workouts</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-gray-900">5</div>
+                <div className="text-sm text-gray-600">Day Streak</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-gray-900">78</div>
+                <div className="text-sm text-gray-600">Strength</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-gray-900">12.4k</div>
+                <div className="text-sm text-gray-600">Calories</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="bg-white rounded-xl shadow-md p-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">
+              Personal Information
+            </h2>
+            <div className="space-y-3">
+              <InfoRow label="Age" value="25 years" />
+              <InfoRow label="Height" value="175 cm" />
+              <InfoRow label="Weight" value="70 kg" />
+              <InfoRow label="Gender" value="Male" />
+              <InfoRow label="Email" value="john.doe@email.com" />
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-md p-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">
+              Fitness Profile
+            </h2>
+            <div className="space-y-3">
+              <InfoRow label="Fitness Level" value="Intermediate" />
+              <InfoRow label="Workout Frequency" value="5 days/week" />
+              <div>
+                <div className="text-sm text-gray-600 mb-2">Primary Goals</div>
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm">
+                    Muscle Gain
+                  </span>
+                  <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm">
+                    Strength
+                  </span>
+                  <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm">
+                    Endurance
+                  </span>
+                </div>
+              </div>
+              <div>
+                <div className="text-sm text-gray-600 mb-2">
+                  Available Equipment
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">
+                    Dumbbells
+                  </span>
+                  <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">
+                    Barbell
+                  </span>
+                  <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">
+                    Bench
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+          <h2 className="text-xl font-bold text-gray-900 mb-4">Settings</h2>
+          <div className="space-y-4">
+            <SettingRow
+              icon={Bell}
+              label="Notifications"
+              description="Manage your notification preferences"
+            >
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="sr-only peer"
+                  defaultChecked
+                />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+              </label>
+            </SettingRow>
+
+            <SettingRow
+              icon={Calendar}
+              label="Workout Reminders"
+              description="Get reminded about your scheduled workouts"
+            >
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="sr-only peer"
+                  defaultChecked
+                />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+              </label>
+            </SettingRow>
+
+            <SettingRow
+              icon={User}
+              label="Privacy Settings"
+              description="Control your data and privacy"
+            >
+              <ChevronRight className="w-5 h-5 text-gray-400" />
+            </SettingRow>
+
+            <SettingRow
+              icon={FileText}
+              label="Terms & Privacy"
+              description="View our terms and privacy policy"
+            >
+              <ChevronRight className="w-5 h-5 text-gray-400" />
+            </SettingRow>
+
+            <SettingRow
+              icon={LogOut}
+              label="Sign Out"
+              description="Sign out of your account"
+            >
+              <button
+                onClick={() => setCurrentScreen("login")}
+                className="text-red-600 font-medium hover:text-red-700"
+              >
+                Sign Out
+              </button>
+            </SettingRow>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Admin Dashboard Screen
+  const AdminDashboardScreen = () => (
+    <div className="min-h-screen bg-gray-50">
+      <Navigation active="admin" userRole="admin" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Admin Dashboard
+            </h1>
+            <p className="text-gray-600">
+              Manage exercises, users, and content
+            </p>
+          </div>
+          <button className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-indigo-700 hover:to-purple-700 transition flex items-center space-x-2">
+            <Upload className="w-5 h-5" />
+            <span>Add Exercise</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Screen Router with new screens
+  const screens = {
+    login: <LoginScreen />,
+    register: <LoginScreen />,
+    onboarding: <OnboardingScreen />,
+    dashboard: <DashboardScreen />,
+    workouts: <DashboardScreen />,
+    "workout-plan": <WorkoutPlanScreen />,
+    "workout-execution": <WorkoutExecutionScreen />,
+    "workout-history": <WorkoutHistoryScreen />,
+    "exercise-detail": <ExerciseDetailScreen />,
+    nutrition: <NutritionScreen />,
+    "food-upload": <FoodUploadScreen />,
+    progress: <ProgressScreen />,
+    profile: <ProfileScreen />,
+    settings: <SettingsScreen />,
+    admin: <AdminDashboardScreen />,
+    notifications: <NotificationsScreen />,
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {screens[currentScreen]}
+
+      {/* Screen Navigation Helper */}
+      <div className="fixed bottom-6 right-6 bg-white rounded-lg shadow-2xl p-4 border border-gray-200 max-h-[500px] overflow-y-auto z-50">
+        <h3 className="font-bold text-gray-900 mb-3 text-sm sticky top-0 bg-white pb-2">
+          Navigate Screens:
+        </h3>
+        <div className="grid grid-cols-2 gap-2 text-xs">
+          <button
+            onClick={() => setCurrentScreen("login")}
+            className={`px-3 py-2 rounded ${
+              currentScreen === "login"
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            } transition`}
+          >
+            Login
+          </button>
+          <button
+            onClick={() => setCurrentScreen("onboarding")}
+            className={`px-3 py-2 rounded ${
+              currentScreen === "onboarding"
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            } transition`}
+          >
+            Onboarding
+          </button>
+          <button
+            onClick={() => setCurrentScreen("dashboard")}
+            className={`px-3 py-2 rounded ${
+              currentScreen === "dashboard"
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            } transition`}
+          >
+            Dashboard
+          </button>
+          <button
+            onClick={() => setCurrentScreen("workout-plan")}
+            className={`px-3 py-2 rounded ${
+              currentScreen === "workout-plan"
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            } transition`}
+          >
+            Plans
+          </button>
+          <button
+            onClick={() => setCurrentScreen("workout-execution")}
+            className={`px-3 py-2 rounded ${
+              currentScreen === "workout-execution"
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            } transition`}
+          >
+            Workout
+          </button>
+          <button
+            onClick={() => setCurrentScreen("workout-history")}
+            className={`px-3 py-2 rounded ${
+              currentScreen === "workout-history"
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            } transition`}
+          >
+            History
+          </button>
+          <button
+            onClick={() => setCurrentScreen("exercise-detail")}
+            className={`px-3 py-2 rounded ${
+              currentScreen === "exercise-detail"
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            } transition`}
+          >
+            Exercise
+          </button>
+          <button
+            onClick={() => setCurrentScreen("nutrition")}
+            className={`px-3 py-2 rounded ${
+              currentScreen === "nutrition"
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            } transition`}
+          >
+            Nutrition
+          </button>
+          <button
+            onClick={() => setCurrentScreen("food-upload")}
+            className={`px-3 py-2 rounded ${
+              currentScreen === "food-upload"
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            } transition`}
+          >
+            Add Meal
+          </button>
+          <button
+            onClick={() => setCurrentScreen("progress")}
+            className={`px-3 py-2 rounded ${
+              currentScreen === "progress"
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            } transition`}
+          >
+            Progress
+          </button>
+          <button
+            onClick={() => setCurrentScreen("profile")}
+            className={`px-3 py-2 rounded ${
+              currentScreen === "profile"
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            } transition`}
+          >
+            Profile
+          </button>
+          <button
+            onClick={() => setCurrentScreen("settings")}
+            className={`px-3 py-2 rounded ${
+              currentScreen === "settings"
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            } transition`}
+          >
+            Settings
+          </button>
+          <button
+            onClick={() => setCurrentScreen("notifications")}
+            className={`px-3 py-2 rounded ${
+              currentScreen === "notifications"
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            } transition`}
+          >
+            Notifications
+          </button>
+          <button
+            onClick={() => setCurrentScreen("admin")}
+            className={`px-3 py-2 rounded col-span-2 ${
+              currentScreen === "admin"
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            } transition`}
+          >
+            Admin Dashboard
+          </button>
+        </div>
+        <div className="mt-3 pt-3 border-t border-gray-200 text-center">
+          <p className="text-xs text-gray-500">
+            Total: {Object.keys(screens).length} screens
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default FitRXUIDesign;
